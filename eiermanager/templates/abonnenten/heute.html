@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Abonnenten – Heute buchen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Heute buchen – {{ today.strftime('%d.%m.%Y') }}</h1>
+        <div></div>
+    </div>
+
+    {% set tage = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'] %}
+    <p class="fm-subtle text-center">Vorgeschlagene Abos für <b>{{ tage[weekday] }}</b>. Menge ist pro Abo anpassbar.</p>
+
+    <form method="post">
+        <div class="table-responsive">
+            <table class="table fm-table">
+                <thead>
+                <tr>
+                    <th>✔</th>
+                    <th>Name</th>
+                    <th class="text-end">Menge</th>
+                    <th>Notizen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for a in abos %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selected_{{ a.id }}" checked>
+                    </td>
+                    <td>{{ a.name }}</td>
+                    <td class="text-end" style="min-width:120px;">
+                        <input type="number" name="menge_{{ a.id }}" class="fm-input" value="{{ a.menge }}" min="1" style="max-width:140px; text-align:right;">
+                    </td>
+                    <td>{{ a.notizen or '' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center text-muted">Heute sind keine aktiven Abos fällig.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="fm-actions">
+            <button class="btn btn-green" type="submit" {% if not abos %}disabled{% endif %}>Buchen (Abgang)</button>
+            <a href="{{ url_for('abonnenten.index') }}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

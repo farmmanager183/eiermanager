@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Abgang{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2 class="mb-3">Abgang – Typ wählen</h2>
+    <div class="grid-container">
+        <a href="{{ url_for('huehner.abgang_typ', typ='verkauf') }}" class="grid-item"><span class="icon">🛒</span> Verkauf</a>
+        <a href="{{ url_for('huehner.abgang_typ', typ='automat') }}" class="grid-item"><span class="icon">🤖</span> Automat</a>
+        <a href="{{ url_for('huehner.abgang_typ', typ='defekt') }}" class="grid-item"><span class="icon">⚠️</span> Defekt</a>
+        <a href="{{ url_for('huehner.abgang_typ', typ='eigenbedarf') }}" class="grid-item"><span class="icon">🍳</span> Eigenbedarf</a>
+    </div>
+
+    <div class="mt-3">
+        <a href="{{ url_for('huehner.abgang_abo_liste') }}" class="btn btn-outline-primary btn-sm">Abo bedienen</a>
+        <a href="{{ url_for('huehner.menu') }}" class="btn btn-outline-secondary btn-sm">Zurück</a>
+    </div>
+</div>
+{% endblock %}

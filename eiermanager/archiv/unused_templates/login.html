@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – FarmManager</title>
+    <link href="/cdn/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .pin-display {
+            font-size: 2.5rem;
+            letter-spacing: 20px;
+            margin-bottom: 25px;
+            height: 40px;
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            justify-items: center;
+            margin-bottom: 15px;
+        }
+
+        .pin-pad .btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            padding: 0;
+        }
+
+        .btn-clear {
+            grid-column: span 3;
+            width: 100%;
+            height: 60px;
+            font-size: 1.2rem;
+            border-radius: 16px;
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="logo">
+    <h2 class="mb-4">PIN eingeben</h2>
+
+    <form method="POST" action="{{ url_for('login') }}" id="pin-form">
+        <input type="hidden" id="pin" name="pin" maxlength="4" required>
+        <div class="pin-display" id="pin-display"></div>
+
+        <div class="pin-pad">
+            {% for num in [1,2,3,4,5,6,7,8,9] %}
+            <button type="button" class="btn btn-outline-secondary" onclick="addDigit('{{ num }}')">{{ num }}</button>
+            {% endfor %}
+
+            <div></div>
+            <button type="button" class="btn btn-outline-secondary" onclick="addDigit('0')">0</button>
+            <div></div>
+
+            <button type="button" class="btn btn-clear mt-3" onclick="clearPin()">⌫</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let pin = "";
+
+    function updateDisplay() {
+        const display = document.getElementById("pin-display");
+        display.textContent = pin.split("").map(() => "•").join(" ");
+    }
+
+    function addDigit(digit) {
+        if (pin.length < 4) {
+            pin += digit;
+            document.getElementById("pin").value = pin;
+            updateDisplay();
+
+            if (pin.length === 4) {
+                setTimeout(() => {
+                    document.getElementById("pin-form").submit();
+                }, 150); // leichter Delay für optisches Feedback
+            }
+        }
+    }
+
+    function clearPin() {
+        pin = "";
+        document.getElementById("pin").value = "";
+        updateDisplay();
+    }
+
+    updateDisplay();
+</script>
+</body>
+</html>

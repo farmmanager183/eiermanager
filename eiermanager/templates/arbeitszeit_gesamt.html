@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbeitszeitübersicht</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin: 50px auto;
+            max-width: 1100px;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #6d4c41;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .summary {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Arbeitszeitübersicht</h1>
+
+    <!-- Dropdown-Menü zur Auswahl des Benutzers -->
+    <div class="mb-3">
+        <label for="userSelect" class="form-label">Benutzer auswählen:</label>
+        <select id="userSelect" class="form-select" onchange="filterArbeitszeiten()">
+            <option value="all">Alle</option>
+            {% for user in benutzer_liste %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Gesamtarbeitszeit Übersicht -->
+    <div class="summary" id="gesamtArbeitszeitContainer" style="display: none;">
+        Gesamtarbeitszeit diese Woche: <span id="gesamtArbeitszeit">{{ gesamt_arbeitszeit }}</span> Stunden / 40 Stunden
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Datum</th>
+            <th>Einstempelzeit</th>
+            <th>Ausstempelzeit</th>
+            <th>Dauer</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody id="arbeitszeitTabelle">
+        {% for eintrag, username in arbeitszeiten %}
+        <tr data-user="{{ eintrag.user_id }}">
+            <td>{{ username if username else 'Unbekannt' }}</td>
+            <td>{{ eintrag.einstempel_zeit.strftime('%d.%m.%Y') }}</td>
+            <td>{{ eintrag.einstempel_zeit.strftime('%H:%M:%S') }}</td>
+            <td>{% if eintrag.ausstempel_zeit %}{{ eintrag.ausstempel_zeit.strftime('%H:%M:%S') }}{% else %}Noch eingestempelt{% endif %}</td>
+            <td>{% if eintrag.dauer %}{{ eintrag.dauer }}{% else %}Wird berechnet...{% endif %}</td>
+            <td>
+                <button class="btn btn-edit" onclick="openEditModal('{{ eintrag.id }}', '{{ eintrag.einstempel_zeit }}', '{{ eintrag.ausstempel_zeit }}')">Bearbeiten</button>
+                <button class="btn btn-delete" onclick="deleteEntry('{{ eintrag.id }}')">Löschen</button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('menu') }}" class="btn btn-secondary mt-3">Zurück zum Menü</a>
+</div>
+
+<!-- Bearbeiten Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Arbeitszeit bearbeiten</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_id">
+                <label>Einstempelzeit:</label>
+                <input type="datetime-local" id="edit_einstempel" class="form-control">
+                <label>Ausstempelzeit:</label>
+                <input type="datetime-local" id="edit_ausstempel" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" onclick="saveEdit()">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterArbeitszeiten() {
+        let selectedUser = document.getElementById("userSelect").value;
+        let rows = document.querySelectorAll("#arbeitszeitTabelle tr");
+        let totalHours = 0;
+        let gesamtArbeitszeitContainer = document.getElementById("gesamtArbeitszeitContainer");
+
+        if (selectedUser === "all") {
+            gesamtArbeitszeitContainer.style.display = "none";
+        } else {
+            gesamtArbeitszeitContainer.style.display = "block";
+        }
+
+        rows.forEach(row => {
+            if (selectedUser === "all" || row.getAttribute("data-user") === selectedUser) {
+                row.style.display = "";
+                let duration = row.cells[4].innerText.trim();
+                if (duration !== "Wird berechnet..." && duration !== "Noch eingestempelt") {
+                    totalHours += parseFloat(duration);
+                }
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        if (selectedUser !== "all") {
+            document.getElementById("gesamtArbeitszeit").innerText = totalHours.toFixed(2);
+        }
+    }
+
+    function openEditModal(id, einstempel, ausstempel) {
+        document.getElementById("edit_id").value = id;
+        document.getElementById("edit_einstempel").value = einstempel.replace(" ", "T");
+        document.getElementById("edit_ausstempel").value = ausstempel ? ausstempel.replace(" ", "T") : "";
+        $('#editModal').modal('show');
+    }
+
+    function saveEdit() {
+        let id = document.getElementById("edit_id").value;
+        let einstempel = document.getElementById("edit_einstempel").value;
+        let ausstempel = document.getElementById("edit_ausstempel").value;
+
+        $.post("/arbeitszeit_bearbeiten_admin/" + id, { einstempel: einstempel, ausstempel: ausstempel })
+            .done(() => location.reload());
+    }
+
+    function deleteEntry(id) {
+        if (confirm("Eintrag wirklich löschen?")) {
+            $.post("/arbeitszeit_loeschen_admin/" + id).done(() => location.reload());
+        }
+    }
+</script>
+
+</body>
+</html>

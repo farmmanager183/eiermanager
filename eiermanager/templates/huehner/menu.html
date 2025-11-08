@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Menü{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Hühner</h1>
+    <a href="{{ url_for('einstellungen.index') }}" class="fm-settings" title="Einstellungen">⚙️</a>
+  </div>
+
+  <div class="fm-grid" style="margin-top:8px;">
+    <a class="fm-tile" href="{{ url_for('huehner.uebersicht') }}">
+      <div class="fm-ico">📊</div>
+      <div class="fm-txt">Übersicht</div>
+    </a>
+
+    {% for s in mobilstaelle %}
+    <a class="fm-tile" href="{{ url_for('huehner.stall', stall_id=s.id) }}">
+      <div class="fm-ico">🐓</div>
+      <div class="fm-txt">{{ s.name }}</div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="fm-actions">
+    <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

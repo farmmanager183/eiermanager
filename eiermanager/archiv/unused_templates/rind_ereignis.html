@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ereignisse anpassen</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Ereignisse für Rinder anpassen</h1>
+
+    <!-- Ereignisse für ein einzelnes Rind -->
+    <div class="form-section mt-4">
+        <h3 class="text-info">Ereignis für ein einzelnes Rind</h3>
+        <form method="POST" action="/rinder/ereignisse_einzel">
+            <div class="mb-3">
+                <label for="rind-auswahl" class="form-label">Rind auswählen</label>
+                <select id="rind-auswahl" name="rind_id" class="form-control" required>
+                    <option value="" disabled selected>Bitte ein Rind auswählen</option>
+                    {% for rind in rinder|sort(attribute='name') %}
+                    <option value="{{ rind.id }}">{{ rind.name }} (ID: {{ rind.id }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="ereignis-einzel" class="form-label">Ereignistyp</label>
+                <select id="ereignis-einzel" name="ereignis" class="form-control" required>
+                    <option value="Trächtigkeitsuntersuchung">Trächtigkeitsuntersuchung</option>
+                    <option value="Besamung">Besamung</option>
+                    <option value="Herdenwechsel">Herdenwechsel</option>
+                    <option value="Medikamente">Medikamente</option>
+                    <option value="Impfungen">Impfungen</option>
+                    <option value="Tierarzt">Tierarzt</option>
+                    <option value="Standortwechsel">Standortwechsel</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="datum-einzel" class="form-label">Datum</label>
+                <input type="date" id="datum-einzel" name="datum" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="details-einzel" class="form-label">Details (optional)</label>
+                <textarea id="details-einzel" name="details" class="form-control" rows="2" placeholder="Zusätzliche Informationen"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Ereignis speichern</button>
+        </form>
+    </div>
+
+    <!-- Ereignisse für eine Herde -->
+    <div class="form-section mt-5">
+        <h3 class="text-success">Ereignis für eine Herde</h3>
+        <form method="POST" action="/rinder/ereignisse_herde">
+            <div class="mb-3">
+                <label for="herde-auswahl" class="form-label">Herde auswählen</label>
+                <select id="herde-auswahl" name="herde_id" class="form-control" required>
+                    <option value="" disabled selected>Bitte eine Herde auswählen</option>
+                    {% for herde in herden|sort(attribute='name') %}
+                    <option value="{{ herde['id'] }}">{{ herde['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="ereignis-herde" class="form-label">Ereignistyp</label>
+                <select id="ereignis-herde" name="ereignis" class="form-control" required>
+                    <option value="Trächtigkeitsuntersuchung">Trächtigkeitsuntersuchung</option>
+                    <option value="Besamung">Besamung</option>
+                    <option value="Herdenwechsel">Herdenwechsel</option>
+                    <option value="Medikamente">Medikamente</option>
+                    <option value="Impfungen">Impfungen</option>
+                    <option value="Tierarzt">Tierarzt</option>
+                    <option value="Standortwechsel">Standortwechsel</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="datum-herde" class="form-label">Datum</label>
+                <input type="date" id="datum-herde" name="datum" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="details-herde" class="form-label">Details (optional)</label>
+                <textarea id="details-herde" name="details" class="form-control" rows="2" placeholder="Zusätzliche Informationen"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Ereignis für Herde speichern</button>
+        </form>
+    </div>
+
+    <!-- Zurück zum Menü -->
+    <div class="mt-4 text-center">
+        <a href="/rinder" class="btn btn-secondary">Zurück zum Menü</a>
+    </div>
+</div>
+
+<script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

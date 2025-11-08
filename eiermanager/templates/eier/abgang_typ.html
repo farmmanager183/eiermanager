@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Eier – Abgang {{ typ|capitalize }}{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu" style="max-width:640px;margin-inline:auto;">
+  <h2 class="mb-3 text-center">
+    Eier – Abgang:
+    {% set labels = {'verkauf':'Verkauf','verlust':'Verlust','restaurant':'Restaurant','eigenbedarf':'Eigenbedarf'} %}
+    {{ labels.get(typ, typ|capitalize) }}
+  </h2>
+
+  <form method="post" class="mt-3">
+    <label class="form-label">Menge (Stück)</label>
+    <input type="number" name="menge" min="1" step="1" class="fm-input" placeholder="z. B. 10" required>
+
+    <div class="fm-actions mt-3">
+      <a href="{{ url_for('eier.abgang_menu') }}" class="btn btn-outline">⬅️ Zurück</a>
+      <button type="submit" class="btn btn-red">Buchen</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

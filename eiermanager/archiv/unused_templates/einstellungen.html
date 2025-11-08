@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmManager - Einstellungen</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #6d4c41;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            padding: 15px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            color: #6d4c41;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .btn i {
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background-color: #7cc529;
+            color: #ffffff;
+        }
+
+        .btn-users i { color: #007bff; }
+        .btn-abonnenten i { color: #28a745; }
+        .btn-daten i { color: #dc3545; }
+        .btn-eingaben i { color: #ffc107; }
+        .btn-gastro i { color: #17a2b8; }
+        .btn-aufgaben i { color: #6f42c1; }
+        .btn-verkauf i { color: #ff6f00; }
+        .btn-arbeitszeit i { color: #17a2b8; }
+
+        .back-btn {
+            background-color: #6d4c41;
+            color: white;
+        }
+
+        .back-btn i { color: white; }
+
+        .back-btn:hover {
+            background-color: #543a2e;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚙️ Einstellungen</h1>
+    <a href="/einstellungen/benutzer" class="btn btn-users">
+        <i class="fas fa-users"></i> Benutzer verwalten
+    </a>
+    <a href="/einstellungen/abonnenten" class="btn btn-abonnenten">
+        <i class="fas fa-bell"></i> Abonnenten verwalten
+    </a>
+    <a href="/einstellungen/daten_loeschen" class="btn btn-daten">
+        <i class="fas fa-trash"></i> Daten löschen
+    </a>
+    <a href="/einstellungen/eingaben_loeschen" class="btn btn-eingaben">
+        <i class="fas fa-eraser"></i> Eingaben löschen
+    </a>
+    <a href="/einstellungen/gastro" class="btn btn-gastro">
+        <i class="fas fa-utensils"></i> Gastro verwalten
+    </a>
+    <a href="/einstellungen/aufgaben" class="btn btn-aufgaben">
+        <i class="fas fa-tasks"></i> Aufgaben verwalten
+    </a>
+    <a href="/einstellungen/verkauf_produkte" class="btn btn-verkauf">
+        <i class="fas fa-box-open"></i> Diese Funktion ist noch nicht verfügbar
+    </a>
+    <a href="/arbeitszeit_gesamt" class="btn btn-arbeitszeit">
+        <i class="fas fa-clock"></i> Arbeitszeit Gesamtübersicht
+    </a>
+    <a href="/" class="btn back-btn">
+        <i class="fas fa-arrow-left"></i> Zurück
+    </a>
+</div>
+</body>
+</html>

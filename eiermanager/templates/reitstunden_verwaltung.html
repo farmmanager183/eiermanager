@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reitstunden Verwaltung</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/cdn/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <link rel="stylesheet" href="/cdn/npm/fullcalendar@5.11.3/main.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .modal-content {
+            border-radius: 15px;
+        }
+        #calendar {
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center">Reitstunden Verwaltung</h2>
+
+    <!-- Eingabemaske für Reitstunden -->
+    <div class="card p-3 mb-3">
+        <h5>Reitstunde hinzufügen</h5>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" id="kunde" class="form-control" placeholder="Kundenname">
+            </div>
+            <div class="col-md-3">
+                <select id="mitarbeiter" class="form-select">
+                    <option value="">Mitarbeiter wählen</option>
+                    {% for mitarbeiter in mitarbeiter_liste %}
+                    <option value="{{ mitarbeiter.id }}">{{ mitarbeiter.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="pferd" class="form-select">
+                    <option value="">Pferd wählen</option>
+                    {% for pferd in pferde_liste %}
+                    <option value="{{ pferd.id }}">{{ pferd.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" id="reitstunde_datum" class="form-control">
+            </div>
+        </div>
+        <button class="btn btn-success mt-2" onclick="addReitstunde()">Hinzufügen</button>
+    </div>
+
+    <!-- Kalender -->
+    <div id="calendar"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+            events: "/get_reitstunden",
+            dateClick: function (info) {
+                document.getElementById("reitstunde_datum").value = info.dateStr + "T10:00";
+            }
+        });
+        calendar.render();
+    });
+
+    function addReitstunde() {
+        let kunde = document.getElementById("kunde").value;
+        let mitarbeiter = document.getElementById("mitarbeiter").value;
+        let pferd = document.getElementById("pferd").value;
+        let datum = document.getElementById("reitstunde_datum").value;
+
+        if (!kunde || !mitarbeiter || !pferd || !datum) {
+            alert("Bitte alle Felder ausfüllen!");
+            return;
+        }
+
+        $.post("/add_reitstunde", { kunde, mitarbeiter, pferd, datum }, function (response) {
+            if (response.success) {
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        }, "json");
+    }
+</script>
+</body>
+</html>

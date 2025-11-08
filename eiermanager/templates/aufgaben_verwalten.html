@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgaben Verwalten</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f0fff0, #e6f7e6);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #4b5320;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #4caf50;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .form-select {
+            border-radius: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #6fa8dc;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5b90d1;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-success {
+            background-color: #81c784;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #66bb6a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background-color: #e57373;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #ef5350;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Header-Bereich -->
+    <header class="mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Aufgaben Verwalten</h1>
+            <a href="{{ url_for('einstellungen') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+        <hr>
+    </header>
+
+    <!-- Benutzer-Auswahl -->
+    <section class="mb-4">
+        <form method="GET" action="{{ url_for('aufgaben_verwalten') }}">
+            <div class="row align-items-center">
+                <div class="col-md-8 mb-2">
+                    <label for="benutzerSelect" class="form-label">Benutzer auswählen:</label>
+                    <select id="benutzerSelect" name="benutzer_id" class="form-select" required>
+                        <option value="" disabled selected>Wähle einen Benutzer</option>
+                        {% for benutzer in benutzer_liste %}
+                        <option value="{{ benutzer.id }}" {% if benutzer.id == ausgewählter_benutzer_id %}selected{% endif %}>
+                            {{ benutzer.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">Aufgaben anzeigen</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Aufgabenliste -->
+    <section class="mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0">Aufgabenliste</h2>
+            </div>
+            <div class="card-body">
+                {% if aufgaben %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Beschreibung</th>
+                        <th>Datum</th>
+                        <th>Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for aufgabe in aufgaben %}
+                    <tr>
+                        <td>{{ aufgabe.beschreibung }}</td>
+                        <td>{{ aufgabe.datum.strftime('%Y-%m-%d') if aufgabe.datum else 'Keine' }}</td>
+                        <td>
+                            {% if aufgabe.erledigt %}
+                            <span class="badge bg-success">Erledigt</span>
+                            {% else %}
+                            <span class="badge bg-danger">Offen</span>
+                            {% endif %}
+                        </td>
+                        <td class="d-flex gap-2">
+                            <a href="{{ url_for('aufgabe_bearbeiten', aufgabe_id=aufgabe.id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                            <form method="POST" action="{{ url_for('aufgabe_loeschen') }}" class="d-inline">
+                                <input type="hidden" name="aufgabe_id" value="{{ aufgabe.id }}">
+                                <input type="hidden" name="benutzer_id" value="{{ ausgewählter_benutzer_id }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center">Keine Aufgaben für den ausgewählten Benutzer gefunden.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Aktionen -->
+    <section>
+        <div class="d-flex justify-content-between gap-2">
+            <a href="{{ url_for('aufgabe_erstellen', benutzer_id=ausgewählter_benutzer_id) }}" class="btn btn-success">Neue Aufgabe erstellen</a>
+            <a href="{{ url_for('wiederkehrende_aufgaben_verwalten') }}" class="btn btn-secondary">Wiederkehrende Aufgaben</a>
+        </div>
+    </section>
+</div>
+
+<script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

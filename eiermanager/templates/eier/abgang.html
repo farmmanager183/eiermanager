@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Eier – Abgang{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <h2 class="mb-2 text-center">Eier – Abgang buchen</h2>
+    <p class="fm-subtle text-center">Abgangsart wählen & Menge addieren (1/6/10/30)</p>
+
+    <!-- Abgangsarten -->
+    <div class="section">
+        <div class="section-title">Abgangsart</div>
+        <div class="abg-grid">
+            <div class="grid-item type-tile" data-type="verkauf">
+                <div class="fm-ico">🛒</div>
+                <div class="fm-txt">Verkauf</div>
+            </div>
+            <div class="grid-item type-tile" data-type="restaurant">
+                <div class="fm-ico">🍽️</div>
+                <div class="fm-txt">Restaurant</div>
+            </div>
+            <div class="grid-item type-tile" data-type="eigenbedarf">
+                <div class="fm-ico">🏠</div>
+                <div class="fm-txt">Eigenbedarf</div>
+            </div>
+            <div class="grid-item type-tile" data-type="verlust">
+                <div class="fm-ico">❌</div>
+                <div class="fm-txt">Verlust</div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="soft-divider">
+
+    <!-- Menge -->
+    <div class="section">
+        <div class="section-title">Menge</div>
+        <div class="chips-row">
+            <div class="pill qty-btn" data-val="1">+1</div>
+            <div class="pill qty-btn" data-val="6">+6</div>
+            <div class="pill qty-btn" data-val="10">+10</div>
+            <div class="pill qty-btn" data-val="30">+30</div>
+
+            <input type="number" id="customInput" class="fm-input"
+                   placeholder="…" style="width:70px;text-align:center;font-size:.9rem;">
+
+            <div class="pill pill-clear" id="resetBtn">Zurücksetzen</div>
+        </div>
+    </div>
+
+    <!-- Zusammenfassung -->
+    <div class="summary-bar mt-3 big-summary">
+        <span class="summary-label">Typ:</span>
+        <span id="currentType">–</span>
+        <span class="summary-label">Menge:</span>
+        <span id="currentMenge">0</span>
+    </div>
+
+    <!-- Formular -->
+    <form method="POST" id="abgangForm" class="text-center mt-3">
+        <input type="hidden" name="typ" id="hiddenType">
+        <input type="hidden" name="menge" id="hiddenMenge">
+
+        <button type="submit" id="buchenBtn" class="btn btn-red w-100 mt-2" style="display:none;">Buchen</button>
+    </form>
+
+    <!-- Zurück -->
+    <div class="fm-actions mt-3">
+        <a href="{{ url_for('eier.menu') }}" class="btn btn-outline btn-back">⬅️ Zurück</a>
+    </div>
+</div>
+
+<script>
+    let selectedType = null;
+    let totalMenge = 0;
+
+    const buchenBtn = document.getElementById("buchenBtn");
+
+    document.querySelectorAll(".type-tile").forEach(tile => {
+        tile.addEventListener("click", () => {
+            document.querySelectorAll(".type-tile").forEach(t => t.classList.remove("active"));
+            tile.classList.add("active");
+            selectedType = tile.dataset.type;
+            updateDisplay();
+        });
+    });
+
+    document.querySelectorAll(".qty-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            totalMenge += parseInt(btn.dataset.val);
+            updateDisplay();
+        });
+    });
+
+    document.getElementById("customInput").addEventListener("change", (e) => {
+        const val = parseInt(e.target.value);
+        if (!isNaN(val) && val > 0) {
+            totalMenge += val;
+            e.target.value = "";
+            updateDisplay();
+        }
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+        totalMenge = 0;
+        updateDisplay();
+    });
+
+    function updateDisplay() {
+        document.getElementById("currentType").textContent = selectedType ? selectedType : "–";
+        document.getElementById("currentMenge").textContent = totalMenge;
+        document.getElementById("hiddenType").value = selectedType || "";
+        document.getElementById("hiddenMenge").value = totalMenge;
+
+        // Button nur zeigen, wenn Menge > 0
+        buchenBtn.style.display = totalMenge > 0 ? "block" : "none";
+    }
+</script>
+{% endblock %}

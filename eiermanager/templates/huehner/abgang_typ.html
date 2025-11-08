@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Abgang {{ typ|capitalize }}{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <h2 class="mb-3">Abgang: {{ typ|capitalize }}</h2>
+
+  <form method="post" action="{{ url_for('huehner.abgang_typ', typ=typ) }}" class="row g-3">
+    <div class="col-md-6">
+      <label for="menge" class="form-label">Menge (Stück)</label>
+      <input type="number" class="form-control" id="menge" name="menge" min="1" required>
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-danger">Buchen</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('huehner.abgang_menu') }}">Zurück</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

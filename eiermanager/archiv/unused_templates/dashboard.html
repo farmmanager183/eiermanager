@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – Eiermanager{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Dashboard</h1>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small">Aktueller Eierbestand</div>
+                <div class="display-6 fw-bold">{{ bestand }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Letzte Verkäufe</h5>
+                    <a class="btn btn-sm btn-outline-secondary disabled">Details</a>
+                </div>
+                <hr/>
+                {% if letzte_verkaeufe %}
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                        <tr><th>Datum</th><th>Produkt</th><th class="text-end">Menge</th><th class="text-end">Betrag</th></tr>
+                        </thead>
+                        <tbody>
+                        {% for v in letzte_verkaeufe %}
+                        <tr>
+                            <td>{{ v.datum.strftime('%d.%m.%Y %H:%M') if v.datum else '-' }}</td>
+                            <td>{{ v.produkt.name if v.produkt else '-' }}</td>
+                            <td class="text-end">{{ v.menge }}</td>
+                            <td class="text-end">{{ "%.2f"|format(v.betrag) }} €</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-muted">Keine Verkäufe vorhanden.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Letzte Buchungen</h5>
+        <hr/>
+        {% if letzte_logs %}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+                <thead>
+                <tr><th>Datum</th><th>Typ</th><th class="text-end">Menge</th><th>Quelle</th></tr>
+                </thead>
+                <tbody>
+                {% for e in letzte_logs %}
+                <tr>
+                    <td>{{ e.datum.strftime('%d.%m.%Y') if e.datum else '-' }}</td>
+                    <td>
+                        {% if e.typ == 'zugang' %}
+                        <span class="badge text-bg-success">Zugang</span>
+                        {% elif e.typ == 'abgang' %}
+                        <span class="badge text-bg-danger">Abgang</span>
+                        {% else %}
+                        <span class="badge text-bg-secondary">{{ e.typ }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">{{ e.menge }}</td>
+                    <td>{{ e.name or '-' }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-muted">Noch keine Log-Einträge vorhanden.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

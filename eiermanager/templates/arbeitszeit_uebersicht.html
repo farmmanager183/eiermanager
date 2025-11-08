@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbeitszeitübersicht</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin: 50px auto;
+            max-width: 1100px;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #6d4c41;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .summary {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Arbeitszeitübersicht</h1>
+
+    <!-- Gesamtarbeitszeit Übersicht -->
+    <div class="summary">
+        Gesamtarbeitszeit diese Woche: {{ gesamt_arbeitszeit }} Stunden / 40 Stunden
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Datum</th>
+            <th>Einstempelzeit</th>
+            <th>Ausstempelzeit</th>
+            <th>Dauer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for eintrag, username in arbeitszeiten %}
+        <tr>
+            <td>{{ username if username else 'Unbekannt' }}</td>
+            <td>{{ eintrag.einstempel_zeit.strftime('%d.%m.%Y') }}</td>
+            <td>{{ eintrag.einstempel_zeit.strftime('%H:%M:%S') }}</td>
+            <td>{% if eintrag.ausstempel_zeit %}{{ eintrag.ausstempel_zeit.strftime('%H:%M:%S') }}{% else %}Noch eingestempelt{% endif %}</td>
+            <td>{% if eintrag.dauer %}{{ eintrag.dauer }}{% else %}Wird berechnet...{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('menu') }}" class="btn btn-secondary mt-3">Zurück zum Menü</a>
+</div>
+</body>
+</html>

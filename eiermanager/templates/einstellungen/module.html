@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Einstellungen – Module{% endblock %}
+{% block content %}
+<div class="fm-card card p-3">
+  <h3 class="mb-3 text-center">Module & Rechte</h3>
+
+  <div class="row g-3 justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5>Vorhandene Module</h5>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle">
+              <thead><tr><th>Key</th><th>Label</th><th>Endpoint</th><th>Admin-only</th><th>Aktiv</th></tr></thead>
+              <tbody>
+              {% for m in modules %}
+              <tr>
+                <td>{{ m.key }}</td>
+                <td>{{ m.label }}</td>
+                <td class="text-muted small">{{ m.endpoint }}</td>
+                <td>{{ 'Ja' if m.admin_only else 'Nein' }}</td>
+                <td>{{ 'Ja' if m.active else 'Nein' }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="5" class="text-center text-muted">Keine Module.</td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <hr>
+
+          <h5>Benutzer-Zuweisungen</h5>
+          <form method="post" action="{{ url_for('einstellungen.module_assign') }}" class="mx-auto" style="max-width:720px;">
+            <div class="row g-2 align-items-end">
+              <div class="col-12 col-md-4">
+                <label class="form-label">Benutzer</label>
+                <select class="form-select" name="user_id">
+                  {% for u in users %}<option value="{{ u.id }}">{{ u.username }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Module</label>
+                <select class="form-select" name="module_keys" multiple size="5">
+                  {% for m in modules %}<option value="{{ m.key }}">{{ m.label }}</option>{% endfor %}
+                </select>
+                <div class="form-text">Strg/Cmd klicken, um mehrere zu wählen</div>
+              </div>
+              <div class="col-12 col-md-2 d-grid">
+                <button class="btn btn-primary">Zuweisen</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('einstellungen.index') }}" class="btn btn-outline-secondary">Zurück</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produkt bearbeiten</title>
+  <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Produkt bearbeiten</h1>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ produkt.name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="einheit" class="form-label">Einheit</label>
+      <input type="text" class="form-control" id="einheit" name="einheit" value="{{ produkt.einheit }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="menge" class="form-label">Menge</label>
+      <input type="number" class="form-control" id="menge" name="menge" value="{{ produkt.menge }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+    <a href="/einstellungen/produkte" class="btn btn-secondary">Abbrechen</a>
+  </form>
+</div>
+</body>
+</html>

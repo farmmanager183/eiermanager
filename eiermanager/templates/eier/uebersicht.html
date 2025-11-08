@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Eier – Übersicht{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Eier – Übersicht</h1>
+    <a href="{{ url_for('einstellungen.index') }}" class="fm-settings" title="Einstellungen">⚙️</a>
+  </div>
+
+  <!-- KPI-Zeile für Heute -->
+  <div class="eg-kpi-grid">
+    <div class="eg-kpi">
+      <div class="eg-kpi-label">Start (heute)</div>
+      <div class="eg-kpi-value">{{ kpis.start_today }}</div>
+    </div>
+    <div class="eg-kpi">
+      <div class="eg-kpi-label">Zugang</div>
+      <div class="eg-kpi-value">+{{ kpis.in_today }}</div>
+    </div>
+    <div class="eg-kpi">
+      <div class="eg-kpi-label">Abgang</div>
+      <div class="eg-kpi-value">-{{ kpis.out_today }}</div>
+    </div>
+    <div class="eg-kpi">
+      <div class="eg-kpi-label">Ende (berechnet)</div>
+      <div class="eg-kpi-value">
+        {{ kpis.end_calc_today }}
+        {% if kpis.end_confirmed_today is not none %}
+        <span class="badge badge-dark ms-2">bestätigt: {{ kpis.end_confirmed_today }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <hr class="soft-divider">
+
+  <!-- Zeitraumkopf -->
+  <div class="eg-rangebar">
+    <div>
+      <div class="eg-range-title">Letzte 14 Tage</div>
+      <div class="eg-range-sub">{{ date_from.strftime('%d.%m.%Y') }} – {{ date_to.strftime('%d.%m.%Y') }}</div>
+    </div>
+    <div class="eg-rangebar-actions">
+      <a class="btn btn-outline" href="{{ url_for('eier.uebersicht') }}">Aktualisieren</a>
+    </div>
+  </div>
+
+  <!-- Tabelle -->
+  <div class="table-wrap">
+    <table class="eg-table">
+      <thead>
+      <tr>
+        <th class="sticky">Datum</th>
+        <th class="sticky text-end">Start</th>
+        <th class="sticky text-end">Zugang</th>
+        <th class="sticky sep text-center" colspan="7">Abgänge</th>
+        <th class="sticky text-end">Ende (berechnet)</th>
+        <th class="sticky text-end">Ende (bestätigt)</th>
+        <th class="sticky">Details</th>
+      </tr>
+      <tr class="subhead">
+        <th></th><th></th><th></th>
+        <th class="text-end">Defekt</th>
+        <th class="text-end">Verkauf</th>
+        <th class="text-end">Abo</th>
+        <th class="text-end">Automat</th>
+        <th class="text-end">Eigenb.</th>
+        <th class="text-end">Sonst.</th>
+        <th class="text-end">Summe</th>
+        <th></th><th></th><th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.date.strftime('%a %d.%m.') }}</td>
+        <td class="text-end">{{ r.start }}</td>
+        <td class="text-end">+{{ r.total_in }}</td>
+
+        <td class="text-end">{{ r.out.defekt or 0 }}</td>
+        <td class="text-end">{{ r.out.verkauf or 0 }}</td>
+        <td class="text-end">{{ r.out.abo or 0 }}</td>
+        <td class="text-end">{{ r.out.automat or 0 }}</td>
+        <td class="text-end">{{ r.out.eigenbedarf or 0 }}</td>
+        <td class="text-end">{{ r.out.sonstiges or 0 }}</td>
+        <td class="text-end"><strong>{{ r.total_out }}</strong></td>
+
+        <td class="text-end">
+          <span class="badge {% if r.end_calc >= 0 %}badge-dark{% else %}badge-red{% endif %}">{{ r.end_calc }}</span>
+        </td>
+        <td class="text-end">
+          {% if r.end_confirmed is not none %}
+          <span class="badge badge-green">{{ r.end_confirmed }}</span>
+          {% else %}
+          <span class="text-muted">–</span>
+          {% endif %}
+        </td>
+
+        <td>
+          <details>
+            <summary class="eg-summary">Zugänge pro Stall</summary>
+            <div class="eg-stalls">
+              {% for s in r.zugang_stall %}
+              <div class="eg-stall-row">
+                <span class="eg-stall-name">{{ s.stall.name }}</span>
+                <span class="eg-stall-qty">+{{ s.qty }}</span>
+              </div>
+              {% endfor %}
+              {% if r.note %}
+              <div class="eg-note">{{ r.note }}</div>
+              {% endif %}
+            </div>
+          </details>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="13" class="text-center text-muted">Keine Daten im Zeitraum.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fm-actions">
+    <a href="{{ url_for('eier.menu') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Abonnenten – Menü{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Abonnenten</h1>
+        <a href="{{ url_for('abonnenten.heute') }}" class="fm-settings" title="Heute buchen">📦</a>
+    </div>
+
+    <div class="fm-grid">
+        <a class="fm-tile" href="{{ url_for('abonnenten.liste') }}">
+            <div class="fm-ico">📜</div>
+            <div class="fm-txt">Alle Abos</div>
+        </a>
+        <a class="fm-tile" href="{{ url_for('abonnenten.heute') }}">
+            <div class="fm-ico">✅</div>
+            <div class="fm-txt">Heute buchen</div>
+        </a>
+    </div>
+
+    <div class="fm-actions">
+        <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline">⬅️ Zurück</a>
+    </div>
+</div>
+{% endblock %}

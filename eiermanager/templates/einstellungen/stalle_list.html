@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Mobilställe – Einstellungen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Mobilställe</h1>
+    <a href="{{ url_for('einstellungen.stall_new') }}" class="btn btn-green">+ Neu</a>
+  </div>
+
+  {% if staelle %}
+  <div class="table-responsive">
+    <table class="table fm-table align-middle">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Aktiv</th>
+        <th class="text-end">Start-Bestand</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for s in staelle %}
+      <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ 'Ja' if s.aktiv else 'Nein' }}</td>
+        <td class="text-end">{{ s.hens_start or 0 }}</td>
+        <td class="text-end">
+          <a class="btn btn-outline" href="{{ url_for('einstellungen.stall_edit', stall_id=s.id) }}">Bearbeiten</a>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-muted">Noch keine Ställe angelegt.</div>
+  {% endif %}
+
+  <div class="fm-actions">
+    <a href="{{ url_for('einstellungen.index') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

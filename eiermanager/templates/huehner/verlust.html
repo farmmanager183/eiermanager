@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Verlust{% endblock %}
+{% block content %}
+<div class="fm-menu">
+  <h1 class="fm-hello">Verlust erfassen</h1>
+  <div class="fm-subtle">Bruch, Ausschuss, Verderb …</div>
+
+  <form method="post" class="mt-3">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Menge</label>
+        <input type="number" name="menge" min="1" step="1" class="form-control" required>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Grund (optional)</label>
+        <input type="text" name="grund" class="form-control" placeholder="z. B. Bruch beim Sortieren">
+      </div>
+    </div>
+    <div class="mt-3 d-flex gap-2">
+      <button class="btn btn-outline-danger">Verlust buchen</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('huehner.index') }}">Abbrechen</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

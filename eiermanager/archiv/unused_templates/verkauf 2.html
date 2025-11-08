@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kasse</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center">Kasse</h1>
+  <form id="kassen-form" action="{{ url_for('verkauf_abschließen') }}" method="post">
+    <div id="produkt-liste">
+      <div class="produkt-item row mb-3">
+        <div class="col-md-6">
+          <label for="produkt-1" class="form-label">Produkt:</label>
+          <select name="produkt[]" id="produkt-1" class="form-select">
+            {% for produkt in verkaufsprodukte %}
+            <option value="{{ produkt.id }}" data-preis="{{ produkt.preis_pro_einheit }}">
+              {{ produkt.name }} ({{ produkt.einheit }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="menge-1" class="form-label">Menge:</label>
+          <input type="number" name="menge[]" id="menge-1" class="form-control" step="0.01" min="0">
+        </div>
+        <div class="col-md-3">
+          <label for="preis-1" class="form-label">Preis:</label>
+          <input type="text" class="form-control" id="preis-1" disabled>
+        </div>
+      </div>
+    </div>
+    <button type="button" id="add-product" class="btn btn-success mb-3">+ Produkt hinzufügen</button>
+    <div class="mb-3">
+      <h4>Gesamtsumme: <span id="gesamtsumme">0.00</span> €</h4>
+    </div>
+    <button type="submit" class="btn btn-primary">Verkauf abschließen</button>
+  </form>
+</div>
+<script>
+  $(document).ready(function() {
+    function updateSum() {
+      let sum = 0;
+      $('.produkt-item').each(function() {
+        const preis = parseFloat($(this).find('select option:selected').data('preis')) || 0;
+        const menge = parseFloat($(this).find('input[name="menge[]"]').val()) || 0;
+        const total = preis * menge;
+        $(this).find('input#preis-1').val(total.toFixed(2));
+        sum += total;
+      });
+      $('#gesamtsumme').text(sum.toFixed(2));
+    }
+
+    $('#add-product').on('click', function() {
+      const index = $('.produkt-item').length + 1;
+      const newProduct = `
+            <div class="produkt-item row mb-3">
+                <div class="col-md-6">
+                    <label for="produkt-${index}" class="form-label">Produkt:</label>
+                    <select name="produkt[]" id="produkt-${index}" class="form-select">
+                        {% for produkt in verkaufsprodukte %}
+                            <option value="{{ produkt.id }}" data-preis="{{ produkt.preis_pro_einheit }}">
+                                {{ produkt.name }} ({{ produkt.einheit }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="menge-${index}" class="form-label">Menge:</label>
+                    <input type="number" name="menge[]" id="menge-${index}" class="form-control" step="0.01" min="0">
+                </div>
+                <div class="col-md-3">
+                    <label for="preis-${index}" class="form-label">Preis:</label>
+                    <input type="text" class="form-control" id="preis-${index}" disabled>
+                </div>
+            </div>`;
+      $('#produkt-liste').append(newProduct);
+    });
+
+    $('#kassen-form').on('input', updateSum);
+  });
+</script>
+</body>
+</html>

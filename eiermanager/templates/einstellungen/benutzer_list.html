@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Benutzer – Einstellungen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Benutzer</h1>
+        <a href="{{ url_for('einstellungen.benutzer_new') }}" class="btn btn-green">+ Neu</a>
+    </div>
+
+    {% if users %}
+    <div class="table-responsive">
+        <table class="table fm-table align-middle">
+            <thead>
+            <tr>
+                <th>Benutzername</th>
+                <th>Admin</th>
+                <th>PIN</th>
+                <th class="text-end"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ 'Ja' if u.is_admin else 'Nein' }}</td>
+                <td>{{ u.pin }}</td>
+                <td class="text-end">
+                    {% if u.id != current_user.id %}
+                    <form method="POST" action="{{ url_for('einstellungen.benutzer_delete', user_id=u.id) }}" onsubmit="return confirm('Benutzer wirklich löschen?');" style="display:inline;">
+                        <button type="submit" class="btn btn-red">Löschen</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted">angemeldet</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-muted">Noch keine Benutzer angelegt.</div>
+    {% endif %}
+
+    <div class="fm-actions">
+        <a href="{{ url_for('einstellungen.index') }}" class="btn btn-outline">⬅️ Zurück</a>
+    </div>
+</div>
+{% endblock %}

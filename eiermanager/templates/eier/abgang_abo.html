@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Eier – Abonnements{% endblock %}
+{% block content %}
+<div class="fm-card card p-3">
+  <h3 class="mb-3 text-center">Abo-Abgänge</h3>
+
+  {% if abonnements %}
+  <div class="list-group mx-auto" style="max-width:680px;">
+    {% for abo in abonnements %}
+    <form class="list-group-item d-flex align-items-center justify-content-between gap-2"
+          method="post" action="{{ url_for('eier.abgang_abo_buchen', abo_id=abo.id) }}">
+      <div>
+        <strong>{{ abo.name }}</strong>
+        <div class="text-muted small">Wert: {{ abo.wert }} / Woche{% if abo.abholtag %} · Abholtag: {{ abo.abholtag }}{% endif %}</div>
+      </div>
+      <button class="btn btn-danger btn-sm">Bedienen</button>
+    </form>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-center text-muted">Keine aktiven Abos vorhanden.</p>
+  {% endif %}
+
+  <div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('eier.abgang_menu') }}" class="btn btn-outline-secondary">Zurück</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reitstunden - FarmManager</title>
+  <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/cdn/npm/fullcalendar@5.10.1/main.min.css">
+  <script src="/cdn/npm/fullcalendar@5.10.1/main.min.js"></script>
+  <script src="/cdn/npm/@popperjs/core@2"></script>
+  <script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+      font-family: 'Arial', sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content {
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2 class="text-center text-success">Reitstunden-Planung</h2>
+
+  <!-- Kalender -->
+  <div id="calendar"></div>
+
+  <!-- Popup für Buchung -->
+  <div class="modal fade" id="buchungModal" tabindex="-1" aria-labelledby="buchungModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reitstunde buchen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="buchungForm">
+            <div class="mb-3">
+              <label for="kunde" class="form-label">Kunde</label>
+              <select id="kunde" class="form-select">
+                {% for kunde in kunden %}
+                <option value="{{ kunde.id }}">{{ kunde.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="pferd" class="form-label">Pferd</label>
+              <select id="pferd" class="form-select">
+                {% for pferd in pferde %}
+                <option value="{{ pferd.id }}">{{ pferd.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="datum" class="form-label">Datum & Uhrzeit</label>
+              <input type="datetime-local" id="datum" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Buchen</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let calendarEl = document.getElementById('calendar');
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      dateClick: function (info) {
+        document.getElementById('datum').value = info.dateStr + 'T10:00';
+        let buchungModal = new bootstrap.Modal(document.getElementById('buchungModal'));
+        buchungModal.show();
+      }
+    });
+    calendar.render();
+  });
+
+  document.getElementById("buchungForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    alert("Buchung erfolgreich!");
+    let buchungModal = bootstrap.Modal.getInstance(document.getElementById('buchungModal'));
+    buchungModal.hide();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Abonnenten – Liste{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Abonnenten – Liste</h1>
+    <a href="{{ url_for('abonnenten.neu') }}" class="fm-settings" title="Neues Abo">➕</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table fm-table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th class="text-end">Menge</th>
+        <th>Abholtag</th>
+        <th>Aktiv</th>
+        <th>Notizen</th>
+        <th class="text-end">Aktion</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% set tage = ['Mo','Di','Mi','Do','Fr','Sa','So'] %}
+      {% for a in abos %}
+      <tr>
+        <td>{{ a.name }}</td>
+        <td class="text-end">{{ a.menge }}</td>
+        <td>{{ tage[a.abholtag] }}</td>
+        <td>{{ 'Ja' if a.aktiv else 'Nein' }}</td>
+        <td>{{ a.notizen or '' }}</td>
+        <td class="text-end">
+          <a class="btn btn-outline btn-sm" href="{{ url_for('abonnenten.edit', abo_id=a.id) }}">Bearbeiten</a>
+          <form action="{{ url_for('abonnenten.delete', abo_id=a.id) }}" method="post" style="display:inline" onsubmit="return confirm('Abo löschen?')">
+            <button class="btn btn-red btn-sm">Löschen</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted">Keine Abos vorhanden.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fm-actions">
+    <a href="{{ url_for('abonnenten.neu') }}" class="btn btn-green">Neues Abo</a>
+    <a href="{{ url_for('abonnenten.index') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

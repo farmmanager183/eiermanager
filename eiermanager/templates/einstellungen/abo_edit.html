@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Abo bearbeiten{% endblock %}
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">{{ 'Abo bearbeiten' if abo else 'Abo anlegen' }}</h1>
+    <a href="{{ url_for('einstellungen.abos_list') }}" class="fm-settings" title="Zurück">⬅️</a>
+  </div>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Kunde</label>
+      <input class="fm-input" type="text" name="kunde" required value="{{ abo.kunde if abo else '' }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Wochentag</label>
+      <select name="weekday" class="fm-input" required>
+        {% set tage = [(0,'Montag'),(1,'Dienstag'),(2,'Mittwoch'),(3,'Donnerstag'),(4,'Freitag'),(5,'Samstag'),(6,'Sonntag')] %}
+        {% for v,label in tage %}
+        <option value="{{ v }}" {% if abo and abo.weekday==v %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Menge (Eier)</label>
+      <input class="fm-input" type="number" name="menge" min="1" required value="{{ abo.menge if abo else 10 }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Notiz</label>
+      <input class="fm-input" type="text" name="notiz" value="{{ abo.notiz if abo else '' }}">
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="aktiv" id="aktiv" {% if not abo or abo.aktiv %}checked{% endif %}>
+      <label class="form-check-label" for="aktiv">Aktiv</label>
+    </div>
+
+    <div class="fm-actions">
+      <button class="btn btn-green" type="submit">Speichern</button>
+      <a class="btn btn-outline" href="{{ url_for('einstellungen.abos_list') }}">Abbrechen</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

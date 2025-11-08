@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Eier – Zugang{% endblock %}
+{% block content %}
+<div class="fm-card">
+    <h2 class="mb-3 text-center">Eier Zugang buchen</h2>
+    <form method="post" id="zugangForm">
+
+        <!-- Stall-Kacheln -->
+        <div class="grid-container" id="stallGrid">
+            {% for stall in stalls %}
+            <label class="grid-item stall-tile">
+                <input type="radio" name="stall_id" value="{{ stall.id }}" hidden>
+                <span class="icon">🐓</span>
+                <div>{{ stall.name }}</div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- Eingabefeld Menge -->
+        <div class="mt-3">
+            <input type="number" name="menge" class="fm-input" placeholder="Menge eingeben…" min="1" required>
+        </div>
+
+        <!-- Aktionen -->
+        <div class="fm-actions mt-3">
+            <a href="{{ url_for('eier.menu') }}" class="btn btn-outline">⬅️ Zurück</a>
+            <button type="submit" class="btn-green">✅ Buchen</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Stall-Kachel interaktiv machen
+    document.querySelectorAll('.stall-tile input').forEach(input => {
+        input.addEventListener('change', () => {
+            document.querySelectorAll('.stall-tile').forEach(tile => tile.classList.remove('active'));
+            input.closest('.stall-tile').classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

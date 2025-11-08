@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Einstellungen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Einstellungen</h1>
+        <!-- kein spezieller Link rechts nötig -->
+        <div></div>
+    </div>
+
+    <p class="fm-subtle">Verwalte Ställe, Benutzer und (später) Modul-Zugriffe.</p>
+
+    <div class="fm-grid" style="margin-top:8px;">
+        <a class="fm-tile" href="{{ url_for('einstellungen.stalle_list') }}">
+            <div class="fm-ico">🐓</div>
+            <div class="fm-txt">Mobilställe</div>
+        </a>
+
+        <a class="fm-tile" href="{{ url_for('einstellungen.benutzer_list') }}">
+            <div class="fm-ico">👤</div>
+            <div class="fm-txt">Benutzer</div>
+        </a>
+
+        <a class="fm-tile" href="{{ url_for('einstellungen.module_matrix') }}">
+            <div class="fm-ico">🧩</div>
+            <div class="fm-txt">Module (später)</div>
+        </a>
+    </div>
+
+    <div class="fm-actions">
+        <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline">⬅️ Zurück</a>
+    </div>
+</div>
+{% endblock %}

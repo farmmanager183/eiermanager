@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Zugang{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <h2 class="mb-3">Zugang buchen</h2>
+
+  <form method="post" action="{{ url_for('huehner.zugang') }}" class="row g-3">
+    <div class="col-md-6">
+      <label for="mobil" class="form-label">Mobilstall</label>
+      <select class="form-select" id="mobil" name="mobil" required>
+        <option value="" selected disabled>Bitte wählen…</option>
+        {% for ms in mobilstaelle %}
+        {# du kannst value=ms.id, ms.code oder ms.name nehmen – der View kann alle drei #}
+        <option value="{{ ms.id }}">{{ ms.name }} ({{ ms.code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="menge" class="form-label">Menge (Stück)</label>
+      <input type="number" class="form-control" id="menge" name="menge" min="1" required>
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-success">Buchen</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('huehner.menu') }}">Abbrechen</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

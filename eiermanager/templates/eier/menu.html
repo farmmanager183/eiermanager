@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Eier – Menü{% endblock %}
+
+{% block content %}
+<div class="fm-menu">
+
+  <!-- Kopfbereich -->
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}"
+         alt="FarmManager Logo"
+         class="fm-logo"
+         onerror="this.style.display='none'"/>
+    <h1 class="fm-hello">Eier</h1>
+    <a href="{{ url_for('core.dashboard') }}" class="fm-settings" title="Zurück zum Hauptmenü">🏠</a>
+  </div>
+
+  <div class="fm-subtle">Wähle eine Funktion</div>
+
+  <!-- Kacheln -->
+  <div class="grid-container">
+    {% if has_endpoint('eier.zugang') %}
+    <a href="{{ url_for('eier.zugang') }}" class="grid-item">
+      <span class="icon">➕</span>
+      <span>Zugang buchen</span>
+    </a>
+    {% endif %}
+
+    {% if has_endpoint('eier.abgang_menu') %}
+    <a href="{{ url_for('eier.abgang_menu') }}" class="grid-item">
+      <span class="icon">➖</span>
+      <span>Abgang buchen</span>
+    </a>
+    {% endif %}
+
+    <!-- in templates/eier/menu.html innerhalb der Kacheln -->
+    <a class="fm-tile" href="{{ url_for('eier.abos_heute') }}">
+      <div class="fm-ico">📅</div>
+      <div class="fm-txt">Heutige Abos</div>
+    </a>
+
+
+    {% if has_endpoint('eier.uebersicht') %}
+    <a href="{{ url_for('eier.uebersicht') }}" class="grid-item">
+      <span class="icon">📊</span>
+      <span>Übersicht</span>
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Zurück -->
+  <div class="fm-actions">
+    <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline-secondary btn-sm">Zurück</a>
+  </div>
+
+  <footer class="fm-foot">&copy; {{ 2025 }} FarmManager</footer>
+</div>
+{% endblock %}

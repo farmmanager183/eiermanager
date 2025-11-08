@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Benutzer anlegen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Benutzer anlegen</h1>
+        <div></div>
+    </div>
+
+    <form method="POST" autocomplete="off" novalidate>
+        <div class="mb-3">
+            <label class="form-label">Benutzername</label>
+            <input type="text" name="username" class="fm-input" required autocomplete="off" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">PIN (4-stellig)</label>
+            <input
+                    type="password"
+                    name="pin"
+                    class="fm-input"
+                    minlength="4"
+                    maxlength="4"
+                    pattern="\d{4}"
+                    inputmode="numeric"
+                    autocomplete="new-password"
+                    required
+            />
+            <div class="form-text">Genau 4 Ziffern (0–9), führende Nullen sind erlaubt.</div>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="is_admin" id="is_admin">
+            <label class="form-check-label" for="is_admin">Admin</label>
+        </div>
+
+        <div class="fm-actions">
+            <button type="submit" class="btn btn-green">Speichern</button>
+            <a href="{{ url_for('einstellungen.benutzer_list') }}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

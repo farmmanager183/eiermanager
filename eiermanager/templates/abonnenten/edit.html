@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Abo {{ 'bearbeiten' if abo else 'anlegen' }}{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Abo {{ 'bearbeiten' if abo else 'anlegen' }}</h1>
+        <div></div>
+    </div>
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="fm-input" required value="{{ abo.name if abo else '' }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Menge (Eier pro Abholung)</label>
+            <input type="number" name="menge" class="fm-input" required min="1" value="{{ abo.menge if abo else 10 }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Abholtag</label>
+            {% set tage = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'] %}
+            <select name="abholtag" class="fm-input" required>
+                {% for i in range(7) %}
+                <option value="{{ i }}" {% if abo and abo.abholtag == i %}selected{% endif %}>{{ tage[i] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="aktiv" id="aktiv" {% if not abo or abo.aktiv %}checked{% endif %}>
+            <label class="form-check-label" for="aktiv">Aktiv</label>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Notizen</label>
+            <textarea name="notizen" class="fm-input" rows="3">{{ abo.notizen if abo else '' }}</textarea>
+        </div>
+
+        <div class="fm-actions">
+            <button class="btn btn-green" type="submit">Speichern</button>
+            <a href="{{ url_for('abonnenten.liste') }}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

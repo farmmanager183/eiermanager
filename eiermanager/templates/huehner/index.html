@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Übersicht{% endblock %}
+{% block head %}
+<style>
+  body { background: linear-gradient(135deg, #eaf8e1, #d8f2cb); }
+  .menu-container{ margin:40px auto; max-width:920px; padding:28px; background:#fff; border-radius:20px; box-shadow:0 8px 15px rgba(0,0,0,.18); }
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .tile{ background:#fff; border-radius:16px; padding:18px; text-decoration:none; color:#333; box-shadow:0 6px 10px rgba(0,0,0,.08); transition:.2s; }
+  .tile:hover{ transform:translateY(-3px); box-shadow:0 10px 18px rgba(0,0,0,.12); background:#7cc529; color:#fff; }
+  .tile .name{ font-weight:700; font-size:1.1rem; }
+  .tile .meta{ font-size:.9rem; opacity:.9; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="menu-container">
+  <h2 class="mb-2">Hühner – Übersicht</h2>
+  <div class="text-muted">Aktueller Gesamt-Tierbestand: <b>{{ gesamt }}</b></div>
+
+  <div class="tiles mt-4">
+    {% for s in stalle %}
+    <a class="tile" href="{{ url_for('huehner.stall_detail', stall_id=s.id) }}">
+      <div class="name">{{ s.name }}</div>
+      {% set last = s.reports|sort(attribute='datum')|last %}
+      <div class="meta mt-2">
+        {% if last %}
+        Bestand: <b>{{ last.tierbestand }}</b><br/>
+        Eier (heute): <b>{{ last.eier_anzahl }}</b>
+        {% else %}
+        <span class="text-muted">Noch keine Daten</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="mt-3">
+    <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline-secondary btn-sm">← Zurück</a>
+  </div>
+</div>
+{% endblock %}

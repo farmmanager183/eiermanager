@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Benutzerverwaltung</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+    h1, h2 {
+        color: #333333;
+        text-align: center;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 18px;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        text-align: center;
+    }
+    .btn:hover {
+        background-color: #333333;
+    }
+    .primary {
+        background-color: #007bff;
+    }
+    .secondary {
+        background-color: #6c757d;
+    }
+    .success {
+        background-color: #28a745;
+    }
+    .danger {
+        background-color: #dc3545;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .grid-item {
+        text-align: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #f1f1f1;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .grid-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+    .grid-item i {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body class="bg-light container">
+<div class="container mt-5">
+<h1 class="text-center">Benutzerverwaltung</h1>
+<ul class="list-group mb-4">
+    {% for benutzer in benutzerliste %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ benutzer.username }}
+      <div>
+<a class="btn btn-sm btn-warning" href="/einstellungen/benutzer/{{ benutzer.id }}/edit">✏️ Bearbeiten</a>
+<a class="btn btn-sm btn-danger" href="/einstellungen/benutzer/{{ benutzer.id }}/delete">🗑️ Löschen</a>
+</div>
+</li>
+    {% endfor %}
+  </ul>
+<form method="POST">
+<h3>Benutzer hinzufügen</h3>
+<div class="mb-3">
+<label class="form-label" for="username">Benutzername</label>
+<input class="form-control" id="username" name="username" required="" type="text"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="password">Passwort</label>
+<input class="form-control" id="password" name="password" required="" type="password"/>
+</div>
+<button class="btn btn-primary w-100" name="benutzer" type="submit">💾 Speichern</button>
+</form>
+<a class="btn btn-secondary w-100 mt-3" href="/einstellungen">⬅️ Zurück</a>
+</div>
+</body>
+</html>

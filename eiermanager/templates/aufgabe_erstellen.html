@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe Erstellen</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f1f8e9, #dcedc8); /* Sanfter Grünton-Verlauf */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 40px;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4b5320; /* Dunkler Grünton */
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 2rem;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-control, .form-select {
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #81c784;
+            box-shadow: 0 0 8px rgba(129, 199, 132, 0.5);
+            outline: none;
+        }
+
+        .btn {
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background-color: #81c784;
+            color: white;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #66bb6a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: #6fa8dc;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5b90d1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Neue Aufgabe Erstellen</h1>
+    <form method="POST" action="{{ url_for('aufgabe_erstellen') }}">
+        <div class="mb-3">
+            <label for="benutzer_id" class="form-label">Benutzer</label>
+            <select id="benutzer_id" name="benutzer_id" class="form-select" required>
+                <option value="" disabled {% if not ausgewählter_benutzer_id %}selected{% endif %}>Benutzer auswählen</option>
+                {% for benutzer in benutzer_liste %}
+                <option value="{{ benutzer.id }}" {% if benutzer.id == ausgewählter_benutzer_id %}selected{% endif %}>
+                    {{ benutzer.username }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="beschreibung" class="form-label">Beschreibung</label>
+            <input type="text" id="beschreibung" name="beschreibung" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="datum" class="form-label">Datum</label>
+            <input type="date" id="datum" name="datum" class="form-control" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">💾 Erstellen</button>
+            <a href="{{ url_for('aufgaben_verwalten') }}" class="btn btn-secondary">⬅️ Zurück</a>
+        </div>
+    </form>
+</div>
+
+<script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Benutzer – Einstellungen{% endblock %}
+{% block content %}
+<div class="fm-page">
+    <div class="fm-menu fm-card">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Benutzer</h2>
+            <a class="btn btn-success btn-sm" href="{{ url_for('einstellungen.benutzer_new') }}">Neuer Benutzer</a>
+        </div>
+        <hr>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr><th>Username</th><th>Rolle</th><th class="text-end">Aktionen</th></tr>
+                </thead>
+                <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ "Admin" if u.is_admin else "User" }}</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('einstellungen.benutzer_edit', user_id=u.id) }}">Bearbeiten</a>
+                        {% if current_user.id != u.id %}
+                        <form method="post" action="{{ url_for('einstellungen.benutzer_delete', user_id=u.id) }}" style="display:inline;" onsubmit="return confirm('Benutzer löschen?');">
+                            <button class="btn btn-outline-danger btn-sm">Löschen</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" class="text-center text-muted">Keine Benutzer</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="fm-actions">
+            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('einstellungen.index') }}">Zurück</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

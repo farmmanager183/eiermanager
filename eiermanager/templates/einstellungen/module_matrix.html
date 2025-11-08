@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Module – Einstellungen{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Module (Vorschau)</h1>
+    <div></div>
+  </div>
+
+  <p class="fm-subtle">Hier könnt ihr später Modul-Sichtbarkeiten/Zuordnungen steuern. Fürs Erste nur als Platzhalter, damit keine BuildErrors mehr auftreten.</p>
+
+  <div class="table-responsive">
+    <table class="table fm-table">
+      <thead>
+      <tr><th>Key</th><th>Label</th><th>Endpoint</th><th>Aktiv</th><th>Admin-only</th></tr>
+      </thead>
+      <tbody>
+      {% for m in modules %}
+      <tr>
+        <td>{{ m.key }}</td>
+        <td>{{ m.label }}</td>
+        <td>{{ m.endpoint }}</td>
+        <td>{{ 'Ja' if m.active else 'Nein' }}</td>
+        <td>{{ 'Ja' if m.admin_only else 'Nein' }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fm-actions">
+    <a href="{{ url_for('einstellungen.index') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

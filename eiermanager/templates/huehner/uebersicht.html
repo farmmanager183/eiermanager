@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Hühner – Übersicht{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+  <div class="fm-header">
+    <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="fm-logo" onerror="this.style.display='none'">
+    <h1 class="fm-hello">Übersicht Mobilställe</h1>
+    <!-- FIX: richtiger Endpoint -->
+    <a href="{{ url_for('einstellungen.stalle_list') }}" class="fm-settings" title="Startbestände pflegen">⚙️</a>
+  </div>
+
+  {% if cards %}
+  <div class="fm-grid" style="margin-top:8px;">
+    {% for c in cards %}
+    <a class="fm-tile fm-stallcard" href="{{ url_for('huehner.stall', stall_id=c.stall.id) }}">
+      <!-- Titel -->
+      <div class="stall-head">
+        <div class="stall-name">🐓 {{ c.stall.name }}</div>
+        {% if c.hens is not none %}
+        <span class="badge-soft">Bestand: {{ c.hens }}</span>
+        {% else %}
+        <span class="badge-soft badge-muted">Bestand: –</span>
+        {% endif %}
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-value">{{ c.eggs7 }}</div>
+          <div class="kpi-label">Eier / 7 Tage</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value">{% if c.rate is not none %}{{ c.rate }}%{% else %}–{% endif %}</div>
+          <div class="kpi-label">Legeleistung</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-value">
+            {% if c.last_feed[0] %}{{ c.last_feed[0] }}{% else %}–{% endif %}
+          </div>
+          <div class="kpi-label">letzte Fütterung</div>
+        </div>
+      </div>
+
+      <!-- Letzte Aktionen -->
+      <div class="meta-row">
+        <span class="chip">
+          💧 <span class="chip-text">{% if c.last_water[0] %}{{ c.last_water[0] }}{% else %}–{% endif %}</span>
+        </span>
+        <span class="chip">
+          🧹 <span class="chip-text">{% if c.last_clean[0] %}{{ c.last_clean[0] }}{% else %}–{% endif %}</span>
+        </span>
+        <span class="chip">
+          🚚 <span class="chip-text">{% if c.last_move[0] %}{{ c.last_move[0] }}{% else %}–{% endif %}</span>
+        </span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-muted">Keine Mobilställe gefunden.</div>
+  {% endif %}
+
+  <div class="fm-actions">
+    <a href="{{ url_for('huehner.menu') }}" class="btn btn-outline">⬅️ Zurück</a>
+  </div>
+</div>
+{% endblock %}

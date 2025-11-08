@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Einstellungen – Ställe{% endblock %}
+{% block content %}
+<div class="fm-card card p-3">
+  <h3 class="mb-3 text-center">Ställe verwalten</h3>
+
+  <form class="mx-auto mb-3" style="max-width:540px;" method="post" action="{{ url_for('einstellungen.stall_add') }}">
+    <div class="row g-2">
+      <div class="col-12 col-md-5">
+        <input class="form-control" name="name" placeholder="Name (z. B. Hühnermobil Grün)" required>
+      </div>
+      <div class="col-7 col-md-5">
+        <input class="form-control" name="code" placeholder="Code (z. B. gruen)" required>
+      </div>
+      <div class="col-5 col-md-2 d-grid">
+        <button class="btn btn-primary">Hinzufügen</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="table-responsive mx-auto" style="max-width:860px;">
+    <table class="table table-sm align-middle">
+      <thead>
+      <tr><th>Name</th><th>Code</th><th>Aktiv</th><th class="text-end">Aktionen</th></tr>
+      </thead>
+      <tbody>
+      {% for s in stalls %}
+      <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ s.code }}</td>
+        <td>{{ 'Ja' if s.aktiv else 'Nein' }}</td>
+        <td class="text-end">
+          <form method="post" action="{{ url_for('einstellungen.stall_toggle', stall_id=s.id) }}" class="d-inline">
+            <button class="btn btn-outline-secondary btn-sm">{{ 'Deaktivieren' if s.aktiv else 'Aktivieren' }}</button>
+          </form>
+          <form method="post" action="{{ url_for('einstellungen.stall_delete', stall_id=s.id) }}"
+                class="d-inline" onsubmit="return confirm('Diesen Stall löschen?');">
+            <button class="btn btn-outline-danger btn-sm">Löschen</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-center text-muted">Noch keine Ställe.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('einstellungen.index') }}" class="btn btn-outline-secondary">Zurück</a>
+  </div>
+</div>
+{% endblock %}

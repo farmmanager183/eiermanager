@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buchung für {{ restaurant.name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f0fff0, #e6f7e6); /* Heller Grünton-Verlauf */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #4b5320; /* Dunkles Grün */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .table {
+      border-radius: 15px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .table thead {
+      background-color: #4caf50; /* Sanftes Grün */
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    table th, table td {
+      text-align: center;
+      padding: 15px;
+      border: 1px solid #ddd;
+    }
+
+    .form-control {
+      border-radius: 20px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 25px;
+      transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-success {
+      background-color: #81c784; /* Sanftes Grün */
+      border: none;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #66bb6a;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary {
+      background-color: #6fa8dc; /* Sanftes Blau */
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5b90d1;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+
+      .table th, .table td {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Buchung für {{ restaurant.name }}</h1>
+  <form method="POST" action="/gastro/{{ restaurant.id }}/buchen">
+    <table class="table table-bordered text-center">
+      <thead>
+      <tr>
+        <th>Produkt</th>
+        <th>Einheit</th>
+        <th>Packungsgröße</th>
+        <th>Menge buchen</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for produkt in produkte %}
+      <tr>
+        <td>{{ produkt.name }}</td>
+        <td>{{ produkt.einheit }}</td>
+        <td>{{ produkt.menge }}</td>
+        <td>
+          <input type="number" name="{{ produkt.id }}" min="0" class="form-control">
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-success mt-3">Buchung speichern</button>
+  </form>
+  <a href="/gastro" class="btn btn-secondary mt-4">Zurück</a>
+</div>
+</body>
+</html>

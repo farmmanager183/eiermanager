@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rind bearbeiten</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin: 50px auto;
+            max-width: 800px;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #6d4c41;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background-color: #7cc529;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #67b720;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+        .btn-add, .btn-delete {
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-add {
+            background-color: #007bff;
+        }
+        .btn-add:hover {
+            background-color: #0056b3;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Rind bearbeiten</h1>
+    <form method="POST" action="/rinder/bearbeiten/{{ rind.id }}">
+        <!-- Allgemeine Daten -->
+        <input type="text" name="name" class="form-control mb-3" value="{{ rind.name }}" required>
+        <input type="text" name="ohrmarkennummer" class="form-control mb-3" value="{{ rind.ohrmarkennummer }}" required>
+        <input type="date" name="geburtsdatum" class="form-control mb-3" value="{{ rind.geburtsdatum }}" required>
+        <select name="geschlecht" class="form-control mb-3">
+            <option value="Kuh" {% if rind.geschlecht == 'Kuh' %}selected{% endif %}>Kuh</option>
+            <option value="Bulle" {% if rind.geschlecht == 'Bulle' %}selected{% endif %}>Bulle</option>
+        </select>
+        <input type="text" name="rasse" class="form-control mb-3" value="{{ rind.rasse }}">
+        <input type="text" name="farbe" class="form-control mb-3" value="{{ rind.farbe }}">
+        <input type="text" name="herkunft" class="form-control mb-3" value="{{ rind.herkunft }}">
+        <input type="text" name="herdennummer" class="form-control mb-3" value="{{ rind.herdennummer }}">
+        <input type="text" name="standort" class="form-control mb-3" value="{{ rind.standort }}">
+
+        <!-- Impfungen -->
+        <h4 class="mt-4">Impfungen</h4>
+        <ul>
+            {% for impfung in rind.impfungen %}
+            <li>
+                {{ impfung.typ }} ({{ impfung.datum }})
+                <form method="POST" action="/rinder/{{ rind.id }}/impfung_loeschen/{{ impfung.id }}" style="display:inline;">
+                    <button type="submit" class="btn btn-delete btn-sm">Löschen</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn btn-add mb-3" data-bs-toggle="modal" data-bs-target="#addImpfungModal">Impfung hinzufügen</button>
+
+        <!-- Medikamente -->
+        <h4 class="mt-4">Medikamente</h4>
+        <ul>
+            {% for medikament in rind.medikamente %}
+            <li>
+                {{ medikament.medikament }} ({{ medikament.datum }})
+                <form method="POST" action="/rinder/{{ rind.id }}/medikament_loeschen/{{ medikament.id }}" style="display:inline;">
+                    <button type="submit" class="btn btn-delete btn-sm">Löschen</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn btn-add mb-3" data-bs-toggle="modal" data-bs-target="#addMedikamentModal">Medikament hinzufügen</button>
+
+        <!-- Besamungen -->
+        <h4 class="mt-4">Besamungen</h4>
+        <ul>
+            {% for besamung in rind.besamungen %}
+            <li>
+                {{ besamung.datum }} ({{ besamung.bullensperma if besamung.bullensperma else 'Keine Angaben' }})
+                <form method="POST" action="/rinder/{{ rind.id }}/besamung_loeschen/{{ besamung.id }}" style="display:inline;">
+                    <button type="submit" class="btn btn-delete btn-sm">Löschen</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn btn-add mb-3" data-bs-toggle="modal" data-bs-target="#addBesamungModal">Besamung hinzufügen</button>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary w-100">Speichern</button>
+        <a href="/rinder/detail/{{ rind.id }}" class="btn btn-back mt-3 w-100">Abbrechen</a>
+    </form>
+</div>
+
+<!-- Modal für Impfungen hinzufügen -->
+<div class="modal fade" id="addImpfungModal" tabindex="-1" aria-labelledby="addImpfungModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addImpfungModalLabel">Impfung hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <form method="POST" action="/rinder/{{ rind.id }}/impfung_hinzufuegen">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="impfung_typ" class="form-label">Impfung Typ</label>
+                        <input type="text" id="impfung_typ" name="typ" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="impfung_datum" class="form-label">Datum</label>
+                        <input type="date" id="impfung_datum" name="datum" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für Medikamente hinzufügen -->
+<div class="modal fade" id="addMedikamentModal" tabindex="-1" aria-labelledby="addMedikamentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMedikamentModalLabel">Medikament hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <form method="POST" action="/rinder/{{ rind.id }}/medikament_hinzufuegen">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="medikament_name" class="form-label">Medikament</label>
+                        <input type="text" id="medikament_name" name="medikament" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medikament_datum" class="form-label">Datum</label>
+                        <input type="date" id="medikament_datum" name="datum" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für Besamungen hinzufügen -->
+<div class="modal fade" id="addBesamungModal" tabindex="-1" aria-labelledby="addBesamungModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBesamungModalLabel">Besamung hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <form method="POST" action="/rinder/{{ rind.id }}/besamung_hinzufuegen">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="bullensperma" class="form-label">Bullensperma</label>
+                        <input type="text" id="bullensperma" name="bullensperma" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="besamung_datum" class="form-label">Datum</label>
+                        <input type="date" id="besamung_datum" name="datum" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/cdn/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

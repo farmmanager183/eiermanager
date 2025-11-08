@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Abos verwalten{% endblock %}
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Abos</h1>
+        <a href="{{ url_for('einstellungen.index') }}" class="fm-settings" title="Zurück">⬅️</a>
+    </div>
+
+    <div class="fm-actions" style="justify-content:flex-end; margin-top:-8px;">
+        <a href="{{ url_for('einstellungen.abo_new') }}" class="btn btn-green">+ Neues Abo</a>
+    </div>
+
+    <div class="table-responsive mt-2">
+        <table class="table fm-table">
+            <thead>
+            <tr>
+                <th>Kunde</th>
+                <th>Wochentag</th>
+                <th class="text-end">Menge</th>
+                <th>Aktiv</th>
+                <th>Notiz</th>
+                <th style="width:180px;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for a in abos %}
+            <tr>
+                <td>{{ a.kunde }}</td>
+                <td>
+                    {% set w = ['Mo','Di','Mi','Do','Fr','Sa','So'] %}
+                    {{ w[a.weekday] }}
+                </td>
+                <td class="text-end">{{ a.menge }}</td>
+                <td>{{ 'Ja' if a.aktiv else 'Nein' }}</td>
+                <td>{{ a.notiz or '' }}</td>
+                <td>
+                    <a href="{{ url_for('einstellungen.abo_edit', abo_id=a.id) }}" class="btn btn-outline btn-sm">Bearbeiten</a>
+                    <form method="POST" action="{{ url_for('einstellungen.abo_delete', abo_id=a.id) }}" style="display:inline-block" onsubmit="return confirm('Abo wirklich löschen?');">
+                        <button class="btn btn-red btn-sm">Löschen</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-muted text-center">Noch keine Abos angelegt.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

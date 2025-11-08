@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Einstellungen{% endblock %}
+{% block content %}
+<div class="fm-card fm-menu">
+    <h2 class="mb-3 text-center">Einstellungen</h2>
+    <div class="grid-container">
+        <a href="{{ url_for('einstellungen.staelle') }}" class="grid-item"><span class="icon">🏠</span>Ställe</a>
+        <a href="{{ url_for('einstellungen.benutzer') }}" class="grid-item"><span class="icon">👤</span>Benutzer</a>
+        <a href="{{ url_for('einstellungen.module') }}" class="grid-item"><span class="icon">🧩</span>Module</a>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{{ url_for('core.dashboard') }}" class="btn btn-outline-secondary">Zurück</a>
+    </div>
+</div>
+{% endblock %}

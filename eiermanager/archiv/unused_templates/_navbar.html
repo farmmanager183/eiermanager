@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container container-narrow">
+        <a class="navbar-brand" href="{{ url_for('core.dashboard') }}">Eiermanager</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nm"
+                aria-controls="nm" aria-expanded="false" aria-label="Menü">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="nm" class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('core.dashboard') }}">Dashboard</a></li>
+                {# Weitere Menüpunkte später #}
+            </ul>
+            <div class="d-flex">
+                {% if current_user.is_authenticated %}
+                <form action="{{ url_for('benutzer.logout') }}" method="post" class="ms-2">
+                    <button class="btn btn-outline-danger btn-sm">Logout</button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('benutzer.login') }}" class="btn btn-outline-primary btn-sm">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

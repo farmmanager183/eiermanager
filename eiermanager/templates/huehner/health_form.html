@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Health-Event – {{ stall.name }}{% endblock %}
+{% block head %}
+<style>
+    body{ background: linear-gradient(135deg, #eef8e3, #dff7c8); }
+    .card{ border-radius:16px; box-shadow:0 8px 15px rgba(0,0,0,.08);}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container" style="max-width:600px;">
+    <div class="card p-4 mt-3">
+        <h3>Health-Event – {{ stall.name }}</h3>
+        <form method="post" class="mt-2">
+            <div class="mb-2">
+                <label class="form-label">Typ</label>
+                <select name="typ" class="form-select" required>
+                    <option value="verlust">Verlust (Todesfall)</option>
+                    <option value="krankheit">Krankheit</option>
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Anzahl</label>
+                <input type="number" name="anzahl" min="1" class="form-control" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Beschreibung (optional)</label>
+                <input type="text" name="beschreibung" class="form-control" placeholder="z. B. Lahmheit, Durchfall">
+            </div>
+            <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-danger">Erfassen</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('huehner.stall_detail', stall_id=stall.id) }}">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

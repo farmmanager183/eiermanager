@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Menü – FarmManager{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+
+    <!-- Kopfbereich -->
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}"
+             alt="FarmManager Logo"
+             class="fm-logo"
+             onerror="this.style.display='none'"/>
+        <h1 class="fm-hello">Hallo {{ current_user.username or 'Gast' }}!</h1>
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('einstellungen.index') }}" class="fm-settings" title="Einstellungen">⚙️</a>
+        {% else %}
+        <div></div>
+        {% endif %}
+    </div>
+
+    <div class="fm-subtle">Wähle ein Modul aus</div>
+
+    <!-- Kacheln -->
+    <div class="fm-grid">
+        {% set icons = {
+        'huehner':'🐓','eier':'🥚','verkauf':'🛒','abonnenten':'📅','aufgaben':'✅',
+        'ackerschlag':'🌾','ferienwohnungen':'🏡','werkstatt':'🧰','lager':'📦',
+        'rinder':'🐄','pferde':'🐴','events':'🎟️','benutzer':'👤','finanzen':'💶',
+        'reports':'📊','marketing':'📣'
+        } %}
+        {% for m in modules if m.key != 'einstellungen' and has_endpoint(m.endpoint) and can_access_module(m) %}
+        <a class="fm-tile" href="{{ url_for(m.endpoint) }}">
+            <div class="fm-ico">{{ icons.get(m.key, '📦') }}</div>
+            <div class="fm-txt">{{ m.label }}</div>
+        </a>
+        {% else %}
+        <div class="text-muted">Keine Module verfügbar.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Logout -->
+    <div class="fm-actions">
+        <form action="{{ url_for('benutzer.logout') }}" method="post">
+            <button class="btn btn-outline btn-sm" type="submit">Abmelden</button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

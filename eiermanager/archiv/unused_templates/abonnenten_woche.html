@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wochenübersicht der Abonnenten</title>
+    <link href="/cdn/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #eaf8e1, #d8f2cb);
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 960px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #6d4c41;
+            margin-bottom: 30px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #7cc529;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            border-radius: 15px 15px 0 0;
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-book {
+            background-color: #7cc529;
+            border: none;
+            color: white;
+            border-radius: 15px;
+            padding: 5px 15px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-book:hover {
+            background-color: #67b720;
+        }
+        .btn-outline-dark {
+            margin-top: 20px;
+            border-radius: 15px;
+            color: #6d4c41;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Wochenübersicht der Abonnenten</h1>
+    {% for tag, abos in wochen_abos.items() %}
+    <div class="card">
+        <div class="card-header">{{ tag }}</div>
+        <div class="card-body">
+            {% if abos %}
+            <ul class="list-group">
+                {% for abo in abos %}
+                <li class="list-group-item">
+                    {{ abo.name }} - Menge: {{ abo.wert }}
+                    <form action="{{ url_for('buchen_abonnement', abo_id=abo.id) }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="abo_id" value="{{ abo.id }}">
+                        <button type="submit" class="btn btn-book">Buchen</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Keine Abonnenten für diesen Tag.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="text-center">
+        <a href="/abonnenten" class="btn btn-outline-dark">⬅️ Zurück</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Einstellungen – Mobilställe{% endblock %}
+
+{% block content %}
+<div class="fm-card fm-menu">
+    <div class="fm-header">
+        <img src="{{ url_for('static', filename='images/FarmManager_Logo.png') }}" alt="Logo" class="fm-logo" onerror="this.style.display='none'">
+        <h1 class="fm-hello">Startbestände je Mobilstall</h1>
+        <a href="{{ url_for('einstellungen.index') }}" class="fm-settings" title="Einstellungen">⚙️</a>
+    </div>
+
+    <form method="POST">
+        <div class="table-responsive">
+            <table class="fm-table">
+                <thead>
+                <tr>
+                    <th>Stall</th>
+                    <th class="text-end">Startbestand (Hühner)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in staelle %}
+                <tr>
+                    <td>{{ s.name }}</td>
+                    <td class="text-end">
+                        <input type="number"
+                               name="hens-{{ s.id }}"
+                               value="{{ s.hens_start or 0 }}"
+                               class="fm-input"
+                               style="max-width:140px;text-align:right;">
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="fm-actions">
+            <button type="submit" class="btn btn-green">Speichern</button>
+            <a href="{{ url_for('huehner.uebersicht') }}" class="btn btn-outline">Zur Hühner-Übersicht</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
